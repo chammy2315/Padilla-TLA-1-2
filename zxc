@@ -30,7 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^6.0.0  # Check for the latest version
+  flutter_riverpod: ^2.0.0  # Ensure this is set to the latest version
 
 
 
