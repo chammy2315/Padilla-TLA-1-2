@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'calculator_model.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => CalculatorModel(),
+    ProviderScope(
       child: MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,29 +23,31 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class CalculatorScreen extends StatelessWidget {
+class CalculatorScreen extends ConsumerWidget {
   final TextEditingController _num1Controller = TextEditingController();
   final TextEditingController _num2Controller = TextEditingController();
 
+  CalculatorScreen({super.key});
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: Text('Calculator')),
+      appBar: AppBar(title: const Text('Calculator')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
               controller: _num1Controller,
-              decoration: InputDecoration(labelText: 'Number 1'),
+              decoration: const InputDecoration(labelText: 'Number 1'),
               keyboardType: TextInputType.number,
             ),
             TextField(
               controller: _num2Controller,
-              decoration: InputDecoration(labelText: 'Number 2'),
+              decoration: const InputDecoration(labelText: 'Number 2'),
               keyboardType: TextInputType.number,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -52,24 +55,42 @@ class CalculatorScreen extends StatelessWidget {
                   onPressed: () {
                     double num1 = double.tryParse(_num1Controller.text) ?? 0;
                     double num2 = double.tryParse(_num2Controller.text) ?? 0;
-                    Provider.of<CalculatorModel>(context, listen: false).add(num1, num2);
+                    ref.read(calculatorProvider).add(num1, num2);
                   },
-                  child: Text('Add'),
+                  child: const Text('Add'),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     double num1 = double.tryParse(_num1Controller.text) ?? 0;
                     double num2 = double.tryParse(_num2Controller.text) ?? 0;
-                    Provider.of<CalculatorModel>(context, listen: false).subtract(num1, num2);
+                    ref.read(calculatorProvider).subtract(num1, num2);
                   },
-                  child: Text('Subtract'),
+                  child: const Text('Subtract'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    double num1 = double.tryParse(_num1Controller.text) ?? 0;
+                    double num2 = double.tryParse(_num2Controller.text) ?? 0;
+                    ref.read(calculatorProvider).multiply(num1, num2);
+                  },
+                  child: const Text('Multiply'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    double num1 = double.tryParse(_num1Controller.text) ?? 0;
+                    double num2 = double.tryParse(_num2Controller.text) ?? 0;
+                    ref.read(calculatorProvider).divide(num1, num2);
+                  },
+                  child: const Text('Divide'),
                 ),
               ],
             ),
-            SizedBox(height: 20),
-            Consumer<CalculatorModel>(
-              builder: (context, calculatorModel, child) {
-                return Text('Result: ${calculatorModel.result}');
+            const SizedBox(height: 20),
+            Consumer(
+              builder: (context, ref, child) {
+                final calculatorModel = ref.watch(calculatorProvider);
+                final result = calculatorModel.result;
+                return Text('Result: $result');
               },
             ),
           ],
