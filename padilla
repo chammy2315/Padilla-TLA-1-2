@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CalculatorModel with ChangeNotifier {
+class CalculatorModel extends ChangeNotifier {
   double _result = 0;
 
   double get result => _result;
 
   void add(double a, double b) {
     _result = a + b;
-    notifyListeners();
+    notifyListeners(); // Notify listeners of the change
   }
 
   void subtract(double a, double b) {
     _result = a - b;
-    notifyListeners();
+    notifyListeners(); // Notify listeners of the change
   }
 
   void multiply(double a, double b) {
     _result = a * b;
-    notifyListeners();
+    notifyListeners(); // Notify listeners of the change
   }
 
   void divide(double a, double b) {
@@ -26,6 +27,11 @@ class CalculatorModel with ChangeNotifier {
     } else {
       _result = 0; // Handle division by zero
     }
-    notifyListeners();
+    notifyListeners(); // Notify listeners of the change
   }
 }
+
+// Provider to expose the CalculatorModel
+final calculatorProvider = ChangeNotifierProvider<CalculatorModel>((ref) {
+  return CalculatorModel();
+});
