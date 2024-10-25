@@ -1,0 +1,80 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'calculator_model.dart';
+
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => CalculatorModel(),
+      child: MyApp(),
+    ),
+  );
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Simple Calculator',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: CalculatorScreen(),
+    );
+  }
+}
+
+class CalculatorScreen extends StatelessWidget {
+  final TextEditingController _num1Controller = TextEditingController();
+  final TextEditingController _num2Controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Calculator')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _num1Controller,
+              decoration: InputDecoration(labelText: 'Number 1'),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: _num2Controller,
+              decoration: InputDecoration(labelText: 'Number 2'),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    double num1 = double.tryParse(_num1Controller.text) ?? 0;
+                    double num2 = double.tryParse(_num2Controller.text) ?? 0;
+                    Provider.of<CalculatorModel>(context, listen: false).add(num1, num2);
+                  },
+                  child: Text('Add'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    double num1 = double.tryParse(_num1Controller.text) ?? 0;
+                    double num2 = double.tryParse(_num2Controller.text) ?? 0;
+                    Provider.of<CalculatorModel>(context, listen: false).subtract(num1, num2);
+                  },
+                  child: Text('Subtract'),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Consumer<CalculatorModel>(
+              builder: (context, calculatorModel, child) {
+                return Text('Result: ${calculatorModel.result}');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
