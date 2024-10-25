@@ -1,0 +1,31 @@
+import 'package:flutter/material.dart';
+
+class CalculatorModel with ChangeNotifier {
+  double _result = 0;
+
+  double get result => _result;
+
+  void add(double a, double b) {
+    _result = a + b;
+    notifyListeners();
+  }
+
+  void subtract(double a, double b) {
+    _result = a - b;
+    notifyListeners();
+  }
+
+  void multiply(double a, double b) {
+    _result = a * b;
+    notifyListeners();
+  }
+
+  void divide(double a, double b) {
+    if (b != 0) {
+      _result = a / b;
+    } else {
+      _result = 0; // Handle division by zero
+    }
+    notifyListeners();
+  }
+}
